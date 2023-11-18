@@ -1,0 +1,1 @@
+{"version":3,"file":"layer1biases.js","sourceRoot":"","sources":["../../../src/nn-model/layer1biases.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,MAAM,QAAQ,CAAC;AAEjC,MAAM,CAAC,MAAM,MAAM,GAAG,MAAM,CAAC,MAAM,CAAC;IAClC,mBAAmB,EAAE,kBAAkB,EAAE,mBAAmB;IAC5D,mBAAmB,EAAE,CAAC,kBAAkB,EAAE,kBAAkB;IAC5D,mBAAmB,EAAE,CAAC,oBAAoB,EAAE,kBAAkB;IAC9D,mBAAmB;CACpB,CAAC,CAAC"}
