@@ -35,7 +35,9 @@ const deployTxn = await Mina.transaction(deployerAccount, () => {
 await deployTxn.sign([deployerKey, zkAppPrivateKey]).send();
 // get the initial state of LinearRegression after deployment
 const num0 = zkAppInstance.result.get();
+let outputHash = zkAppInstance.outputHash.get();
 console.log('state after init:', num0.toString());
+console.log('outputHash after init:', outputHash.toString());
 
 // ----------------------------------------------------
 
@@ -70,7 +72,7 @@ console.log(
 
 const txn1 = await Mina.transaction(senderAccount, () => {
   // array [1,2,3]
-  zkAppInstance.update(
+  zkAppInstance.feedforward(
     input[0],
     input[1],
     input[2],
@@ -273,9 +275,11 @@ await txn1.prove();
 await txn1.sign([senderKey]).send();
 const num1 = zkAppInstance.result.get();
 const probability = zkAppInstance.probability.get();
+outputHash = zkAppInstance.outputHash.get();
 
 console.log('state after txn1:', num1.toString());
 console.log('probability:', probability.toString());
+console.log('outputHash after txn1:', outputHash.toString());
 
 // Convert to float
 console.log('state in float ', fixedQ1616ToFloat(Number(num1.toString())));
@@ -283,27 +287,3 @@ console.log(
   'probability in float ',
   fixedQ1616ToFloat(Number(probability.toString()))
 );
-
-// ----------------------------------------------------
-
-// try {
-//   const txn2 = await Mina.transaction(senderAccount, () => {
-//     zkAppInstance.update(Field(75));
-//   });
-//   await txn2.prove();
-//   await txn2.sign([senderKey]).send();
-// } catch (ex: any) {
-//   console.log(ex.message);
-// }
-// const num2 = zkAppInstance.res.get();
-// console.log('state after txn2:', num2.toString());
-
-// // ----------------------------------------------------
-
-// const txn3 = await Mina.transaction(senderAccount, () => {
-//   zkAppInstance.update(Field(81));
-// });
-// await txn3.prove();
-// await txn3.sign([senderKey]).send();
-// const num3 = zkAppInstance.res.get();
-// console.log('state after txn3:', num3.toString());

@@ -9,6 +9,7 @@ import {
   MerkleTree,
   MerkleWitness,
   Struct,
+  Poseidon
 } from 'o1js';
 import { model, floatToFixedQ1616, fixedQ1616ToFloat } from './helper.js';
 import { nnClassifier } from './modelGen.js';
@@ -27,14 +28,16 @@ export class NNClassifier extends SmartContract {
   @state(Field) result = State<Field>();
   @state(Field) probability = State<Field>();
   @state(Field) inputsMerkleRoot = State<Field>();
+  @state(Field) outputHash = State<Field>();
 
   init() {
     super.init();
     this.result.set(Field(0));
     this.probability.set(Field(0));
+    this.outputHash.set(Field(0));
   }
 
-  @method update(
+  @method feedforward(
     in1: Field,
     in2: Field,
     in3: Field,
@@ -437,6 +440,7 @@ export class NNClassifier extends SmartContract {
         in196.toBigInt(),
       ];
 
+    
       // const inputBigInts = secretInput.map((x) => x.toBigInt());
       const inputFloats = inputBigInts.map((x) =>
         fixedQ1616ToFloat(Number(x.toString()))
@@ -444,6 +448,12 @@ export class NNClassifier extends SmartContract {
       // Provable.log(inputFloats[0].toString());
       const inputMatrix = mathjs.matrix(inputFloats);
       const [output, maxIndex, probability] = nnClassifier(inputMatrix);
+
+      const outputArray = output.valueOf() as number[];
+
+      const outputArrayField = outputArray.map((x) => Field(floatToFixedQ1616(x)));
+      this.outputHash.set(Poseidon.hash(outputArrayField));
+
       Provable.log(output.toString());
 
       let maxIndexFP;
@@ -465,14 +475,8 @@ export class NNClassifier extends SmartContract {
         console.log('dsdas');
       }
 
-      //   const res1FP = floatToFixedQ1616(output);
-      //   const res1FPBigInt = BigInt(res1FP);
-      //   const res1FPField = Field(res1FPBigInt);
-      //   const newState = currentState1.add(res1FPField);
-      //   this.res1.set(newState);
+    
     });
 
-    // const newState = currentState.add(2);
-    // this.res.set(newState);
   }
 }
