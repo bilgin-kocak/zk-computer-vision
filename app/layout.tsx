@@ -5,8 +5,8 @@ import "./globals.scss";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Katz",
-  description: "No time to get catfished",
+  title: "MNIST Classifier",
+  description: "It is time to classify image on Mina",
 };
 
 export default function RootLayout({

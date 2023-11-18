@@ -5,9 +5,12 @@ import { wait } from "@/lib/client-side/utils";
 import type ZkappWorkerClient from "../zkappWorkerClient";
 import { Button } from "@/components/button/Button";
 import { Alert } from "@/components/alert/Alert";
-import Candidates from "./candidates/candidates";
+import Images from "./candidates/candidates";
 import Link from "next/link";
 import { useLocalStorage } from "@/hooks";
+import inputs  from "@/lib/client-side/inputs.json";
+
+console.log('inputs', inputs);
 
 let transactionFee = 0.1;
 
@@ -16,7 +19,7 @@ export default function Content() {
     message: "",
     error: false,
   });
-  const [candidate, setCandidate] = useState(-1);
+  const [image, setImage] = useState(-1);
   const [state, setState] = useState({
     zkappWorkerClient: null as null | ZkappWorkerClient,
     hasWallet: null as null | boolean,
@@ -26,12 +29,12 @@ export default function Content() {
     publicKey: null as null | any,
     zkappPublicKey: null as null | any,
     connecting: false,
-    voting: false,
-    voted: false,
+    calculating: false,
+    calculated: false,
   });
   const [transactionlink, setTransactionLink] = useState("");
-  const [electionResults, setElectionResults] = useLocalStorage(
-    "electionResults",
+  const [mnistClassifierResults, setMnistClassifierResults] = useLocalStorage(
+    "mnistClassifierResults",
     {
       candidates: Array(8).fill(0) as number[],
     }
@@ -58,9 +61,9 @@ export default function Content() {
     })();
   }, [state.hasBeenSetup]);
 
-  const onCastVote = async () => {
+  const onSelectImage = async () => {
     try {
-      setState((prev) => ({ ...prev, voting: true }));
+      setState((prev) => ({ ...prev, calculating: true }));
 
       console.log("Creating a transaction...");
 
@@ -68,7 +71,14 @@ export default function Content() {
         publicKey: state.publicKey!,
       });
 
-      await state.zkappWorkerClient!.cast(candidate);
+      console.log("Creating zkML image...");
+      const image_ = inputs[image];
+
+      console.log("image", image_);
+
+
+
+      await state.zkappWorkerClient!.runZkml(image_);
 
       console.log("Creating proof...");
       await state.zkappWorkerClient!.proveTransaction();
@@ -89,11 +99,11 @@ export default function Content() {
       const transactionLink = `https://berkeley.minaexplorer.com/transaction/${hash}`;
       console.log(`View transaction at ${transactionLink}`);
       setTransactionLink(transactionLink);
-      setState((prev) => ({ ...prev, voted: true }));
+      setState((prev) => ({ ...prev, calculated: true }));
     } catch (error) {
       console.error(error);
     }
-    setState((prev) => ({ ...prev, voting: false }));
+    setState((prev) => ({ ...prev, calculating: false }));
   };
 
   const onConnect = async () => {
@@ -104,24 +114,24 @@ export default function Content() {
           connecting: true,
         }));
         const { Mina, PublicKey, UInt32 } = await import("o1js");
-        const { Vote } = await import("@/contracts/build/src/");
+        const { NNClassifier } = await import("@/contracts/build/src/");
         const ZkappWorkerClient = (await import("@/app/zkappWorkerClient"))
           .default;
         const Berkeley = Mina.Network(
           "https://proxy.berkeley.minaexplorer.com/graphql"
         );
         Mina.setActiveInstance(Berkeley);
-        const zkApp = new Vote(
-          PublicKey.fromBase58(process.env.NEXT_PUBLIC_ZK_APP_PUBLIC_KEY!)
+        const zkApp = new NNClassifier(
+          PublicKey.fromBase58("B62qkvu5auhiL2JZnUtafpSyWJ7AW5gxrHyVzNXqxNPMkzPW1RbV2Zg")
         );
-        const ballot = await zkApp.ballot.fetch();
-        if (ballot) {
-          setElectionResults({
-            candidates: ballot.candidates.map((x: typeof UInt32) =>
-              Number(x.toString())
-            ),
-          });
-        }
+        // const ballot = await zkApp.ballot.fetch();
+        // if (ballot) {
+        //   setMnistClassifierResults({
+        //     candidates: ballot.candidates.map((x: typeof UInt32) =>
+        //       Number(x.toString())
+        //     ),
+        //   });
+        // }
 
         console.log("Loading web worker...");
         const zkappWorkerClient = new ZkappWorkerClient();
@@ -160,14 +170,14 @@ export default function Content() {
             await import("@/contracts/keys/berkeley.json")
           ).publicKey;*/
 
-        const zkappPublicKey = PublicKey.fromBase58(zkappPublicKeyImported);
+        const zkappPublicKey = PublicKey.fromBase58("B62qkvu5auhiL2JZnUtafpSyWJ7AW5gxrHyVzNXqxNPMkzPW1RbV2Zg");
         await zkappWorkerClient.initZkappInstance(zkappPublicKey);
 
         console.log("Getting zkApp state...");
 
         await zkappWorkerClient.fetchAccount({ publicKey: zkappPublicKey });
-        const currentBallot = await zkappWorkerClient.getBallot();
-        console.log(`Current ballot in zkApp state: ${currentBallot}`);
+        const currentResult = await zkappWorkerClient.getResult();
+        console.log(`Current result in zkApp state: ${currentResult}`);
 
         setState({
           ...state,
@@ -177,7 +187,6 @@ export default function Content() {
           publicKey,
           zkappPublicKey,
           accountExists,
-          currentBallot,
         });
       }
     } catch (error) {
@@ -200,13 +209,13 @@ export default function Content() {
         }}
         isError={alert.error}
       />
-      <Candidates
-        onCastVote={(num) => {
-          setCandidate(num);
+      <Images
+        onSelectImage={(num) => {
+          setImage(num);
         }}
       />
       <div className={styles.buttons}>
-        {!state.hasBeenSetup && !state.voted && (
+        {!state.hasBeenSetup && !state.calculated && (
           <Button
             onClick={onConnect}
             text="Connect"
@@ -217,17 +226,17 @@ export default function Content() {
         {!state.connecting &&
           state.hasBeenSetup &&
           state.hasWallet &&
-          !state.voted && (
+          !state.calculated && (
             <Button
-              onClick={onCastVote}
-              text="Vote"
+              onClick={onSelectImage}
+              text="Run ZKML"
               theme="primary"
-              loading={state.voting}
-              loadingText="Voting..."
-              disabled={candidate < 0}
+              loading={state.calculating}
+              loadingText="Calculating..."
+              disabled={image < 0}
             />
           )}
-        {state.voted && (
+        {state.calculated && (
           <>
             <Button href="/results" theme="primary" text="Show results" />
             <Button

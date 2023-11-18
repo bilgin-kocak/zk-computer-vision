@@ -60,23 +60,23 @@ const CATS = [
   
 ];
 
-export default function Candidates({
+export default function Images({
   showResults = false,
-  onCastVote,
+  onSelectImage,
 }: {
   showResults?: boolean;
-  onCastVote?: (number: number) => void;
+  onSelectImage?: (number: number) => void;
 }) {
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [electionResults, setElectionResults] = useLocalStorage(
-    "electionResults",
+  const [mnistClassifierResults, setMnistClassifierResults] = useLocalStorage(
+    "mnistClassifierResults",
     {
       candidates: Array(8).fill(0) as number[],
     }
   );
 
   const getTotalVotes = () => {
-    return electionResults.candidates.reduce((a, b) => a + b, 0);
+    return mnistClassifierResults.candidates.reduce((a, b) => a + b, 0);
   };
 
   const getShare = (index: number) => {
@@ -84,7 +84,7 @@ export default function Candidates({
     if (totalVotes === 0) {
       return 0;
     }
-    return (electionResults.candidates[index] / totalVotes) * 100;
+    return (mnistClassifierResults.candidates[index] / totalVotes) * 100;
   };
 
   return (
@@ -101,7 +101,7 @@ export default function Candidates({
                 return;
               }
               setSelectedIndex(index);
-              onCastVote?.(index);
+              onSelectImage?.(index);
             }}
           >
             <div className={styles.cat__image}>
