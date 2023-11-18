@@ -63,9 +63,11 @@ const DIGITS = [
 export default function Images({
   showResults = false,
   onSelectImage,
+  mlResults,
 }: {
   showResults?: boolean;
   onSelectImage?: (number: number) => void;
+  mlResults?: string[];
 }) {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [mnistClassifierResults, setMnistClassifierResults] = useLocalStorage(
@@ -125,6 +127,7 @@ export default function Images({
               />
             </div>
             <p className={styles.digit__name}>{digit.name}</p>
+            {mlResults && mlResults[index] !== "" && <p>Result: {mlResults[index]}</p>}
           </div>
         ))}
       </div>

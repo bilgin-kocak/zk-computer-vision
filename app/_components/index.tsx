@@ -32,6 +32,7 @@ export default function Content() {
     calculating: false,
     calculated: false,
   });
+  const [mlResults, setMlResults] = useState(["", "", "", "", "", "", "", "","", ""])
   const [transactionlink, setTransactionLink] = useState("");
   const [mnistClassifierResults, setMnistClassifierResults] = useLocalStorage(
     "mnistClassifierResults",
@@ -79,6 +80,19 @@ export default function Content() {
       const res = await state.zkappWorkerClient!.runZkml(image_);
       console.log('zkml res', res);
 
+      if (Array.isArray(res)) {
+        const output = res[0]
+        // Sum the output
+        let sum = 0;
+        for (let i = 0; i < output.length; i++) {
+          sum += output[i];
+        }
+        console.log(sum)
+        mlResults[image] = res[1].toString() + " Prob:" + (output[res[1]]/sum).toString().slice(0, 5);
+        setMlResults(mlResults);
+        console.log("mlResults", mlResults);
+      }
+
       console.log("Creating proof...");
       await state.zkappWorkerClient!.proveTransaction();
 
@@ -123,14 +137,6 @@ export default function Content() {
         const zkApp = new NNClassifier(
           PublicKey.fromBase58("B62qoGMwPAzPPuNPxKx666s8bNJx7Mqhk96XfjyPZjoiwDtAjkfypvh")
         );
-        // const ballot = await zkApp.ballot.fetch();
-        // if (ballot) {
-        //   setMnistClassifierResults({
-        //     candidates: ballot.candidates.map((x: typeof UInt32) =>
-        //       Number(x.toString())
-        //     ),
-        //   });
-        // }
 
         console.log("Loading web worker...");
         const zkappWorkerClient = new ZkappWorkerClient();
@@ -164,10 +170,6 @@ export default function Content() {
 
         const zkappPublicKeyImported =
           process.env.NEXT_PUBLIC_ZK_APP_PUBLIC_KEY!;
-
-        /*const zkappPublicKeyImported = (
-            await import("@/contracts/keys/berkeley.json")
-          ).publicKey;*/
 
         const zkappPublicKey = PublicKey.fromBase58("B62qoGMwPAzPPuNPxKx666s8bNJx7Mqhk96XfjyPZjoiwDtAjkfypvh");
         await zkappWorkerClient.initZkappInstance(zkappPublicKey);
@@ -212,6 +214,7 @@ export default function Content() {
         onSelectImage={(num) => {
           setImage(num);
         }}
+        mlResults={mlResults}
       />
       <div className={styles.buttons}>
         {!state.hasBeenSetup && !state.calculated && (
@@ -235,7 +238,7 @@ export default function Content() {
               disabled={image < 0}
             />
           )}
-        {state.calculated && (
+        {/* {state.calculated && (
           <>
             <Button href="/results" theme="primary" text="Show results" />
             <Button
@@ -245,7 +248,7 @@ export default function Content() {
               openLinkInNewTab={true}
             />
           </>
-        )}
+        )} */}
       </div>
     </div>
   );
