@@ -452,7 +452,6 @@ export class NNClassifier extends SmartContract {
       if (typeof maxIndex === 'number' && typeof probability === 'number') {
         maxIndexFP = floatToFixedQ1616(maxIndex);
         probabilityFP = floatToFixedQ1616(probability);
-        console.log('dsdas');
       }
 
       if (maxIndexFP && probabilityFP) {
@@ -463,7 +462,6 @@ export class NNClassifier extends SmartContract {
         const probabilityFPBigInt = BigInt(probabilityFP);
         const probabilityFPField = Field(probabilityFPBigInt);
         this.probability.set(probabilityFPField);
-        console.log('dsdas');
       }
 
     

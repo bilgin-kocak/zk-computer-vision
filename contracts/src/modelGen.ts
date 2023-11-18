@@ -1,5 +1,5 @@
 import * as math from 'mathjs';
-import * as fs from 'fs';
+// import * as fs from 'fs';
 import { fc1 } from './nn-model/fc1.js';
 import { fc2 } from './nn-model/fc2.js';
 
@@ -31,7 +31,7 @@ function softmax(x: math.Matrix): math.Matrix {
 }
 
 // Function to perform forward pass
-function forwardPass(input: math.Matrix, layers: LayerData[]): math.Matrix {
+function forwardPass(input: math.Matrix): math.Matrix {
   // Perform forward pass
   // First layer
   let output = fc1(input);
@@ -66,16 +66,16 @@ function forwardPass(input: math.Matrix, layers: LayerData[]): math.Matrix {
 }
 
 export function nnClassifier(input: math.Matrix) {
-  const data = fs.readFileSync(
-    './src/nn-model/model_weights_biases.json',
-    'utf8'
-  );
+  // const data = fs.readFileSync(
+  //   './src/nn-model/model_weights_biases.json',
+  //   'utf8'
+  // );
 
   // Parse the JSON data
-  const layers: LayerData[] = JSON.parse(data);
+  // const layers: LayerData[] = JSON.parse(data);
 
   // Perform forward pass
-  let output = forwardPass(input, layers);
+  let output = forwardPass(input);
 
   // Return the index of the highest probability
 
@@ -100,15 +100,15 @@ export function nnClassifier(input: math.Matrix) {
 }
 
 async function main() {
-  const data = fs.readFileSync(
-    './src/nn-model/model_weights_biases.json',
-    'utf8'
-  );
+  // const data = fs.readFileSync(
+  //   './src/nn-model/model_weights_biases.json',
+  //   'utf8'
+  // );
 
   // console.log('Data:', data);
 
   // Parse the JSON data
-  const layers: LayerData[] = JSON.parse(data);
+  // const layers: LayerData[] = JSON.parse(data);
 
   // Sample input vector (you need to replace this with actual input)
   let inputVector = math.matrix([
@@ -128,7 +128,7 @@ async function main() {
   ]);
 
   // Perform forward pass
-  let output = forwardPass(inputVector, layers);
+  let output = forwardPass(inputVector);
   console.log('Output:', output);
 }
 
