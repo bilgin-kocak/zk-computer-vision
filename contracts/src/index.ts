@@ -1,3 +1,3 @@
-import { Vote } from './Vote.js';
+import { NNClassifier } from './NNClassifier.js';
 
-export { Vote };
+export { NNClassifier };

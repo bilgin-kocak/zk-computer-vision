@@ -15,15 +15,6 @@ import { model, floatToFixedQ1616, fixedQ1616ToFloat } from './helper.js';
 import { nnClassifier } from './modelGen.js';
 import * as mathjs from 'mathjs';
 
-export const inputSize = 8; // Total Number of Inputs 2**8 = 256 > 196
-
-export class InputListMerkleWitness extends MerkleWitness(inputSize + 1) {}
-
-export class inputDataStruct extends Struct({
-  inputListWitness: InputListMerkleWitness,
-  votersMerkleTreeRoot: Field,
-}) {}
-
 export class NNClassifier extends SmartContract {
   @state(Field) result = State<Field>();
   @state(Field) probability = State<Field>();

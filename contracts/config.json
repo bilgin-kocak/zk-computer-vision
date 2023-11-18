@@ -4,8 +4,8 @@
     "berkeley": {
       "url": "https://proxy.berkeley.minaexplorer.com/graphql",
       "keyPath": "keys/berkeley.json",
-      "feepayerKeyPath": "/Users/madztheo/.cache/zkapp-cli/keys/main.json",
-      "feepayerAlias": "main",
+      "feepayerKeyPath": "/Users/bilginkocak/.cache/zkapp-cli/keys/berkeley-account.json",
+      "feepayerAlias": "berkeley-account",
       "fee": "0.1"
     }
   }

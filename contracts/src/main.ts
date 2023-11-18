@@ -1,18 +1,7 @@
 // import { LinearRegression } from './LinearRegression.js';
-import { NNClassifier, inputSize } from './NNClassifier.js';
+import { NNClassifier } from './NNClassifier.js';
 import { Field, Mina, PrivateKey, AccountUpdate, MerkleTree } from 'o1js';
 import { floatToFixedQ1616, fixedQ1616ToFloat } from './helper.js';
-
-class OffChainStorage {
-  readonly votersMerkleTree: MerkleTree;
-  voteCountMerkleTree: MerkleTree;
-
-  constructor(options: number) {
-    this.voteCountMerkleTree = new MerkleTree(options + 1);
-  }
-}
-
-const offChainStorageInstance = new OffChainStorage(inputSize);
 
 const useProof = false;
 const Local = Mina.LocalBlockchain({ proofsEnabled: useProof });
