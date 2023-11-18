@@ -4,14 +4,14 @@
     "berkeley": {
       "url": "https://proxy.berkeley.minaexplorer.com/graphql",
       "keyPath": "keys/berkeley.json",
-      "feepayerKeyPath": "/Users/bilginkocak/.cache/zkapp-cli/keys/berkeley-account.json",
-      "feepayerAlias": "berkeley-account",
-      "fee": "0.1",
+      "feepayerKeyPath": "/Users/bilginkocak/.cache/zkapp-cli/keys/deployer.json",
+      "feepayerAlias": "deployer",
+      "fee": "1",
       "smartContract": "NNClassifier"
     },
-    "protokit": {
-      "url": "http://localhost:8080/graphql",
-      "keyPath": "keys/protokit.json",
+    "berkeley1": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/berkeley1.json",
       "feepayerKeyPath": "/Users/bilginkocak/.cache/zkapp-cli/keys/berkeley-account.json",
       "feepayerAlias": "berkeley-account",
       "fee": "1",

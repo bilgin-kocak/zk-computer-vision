@@ -76,9 +76,8 @@ export default function Content() {
 
       console.log("image", image_);
 
-
-
-      await state.zkappWorkerClient!.runZkml(image_);
+      const res = await state.zkappWorkerClient!.runZkml(image_);
+      console.log('zkml res', res);
 
       console.log("Creating proof...");
       await state.zkappWorkerClient!.proveTransaction();
@@ -122,7 +121,7 @@ export default function Content() {
         );
         Mina.setActiveInstance(Berkeley);
         const zkApp = new NNClassifier(
-          PublicKey.fromBase58("B62qkvu5auhiL2JZnUtafpSyWJ7AW5gxrHyVzNXqxNPMkzPW1RbV2Zg")
+          PublicKey.fromBase58("B62qoGMwPAzPPuNPxKx666s8bNJx7Mqhk96XfjyPZjoiwDtAjkfypvh")
         );
         // const ballot = await zkApp.ballot.fetch();
         // if (ballot) {
@@ -170,7 +169,7 @@ export default function Content() {
             await import("@/contracts/keys/berkeley.json")
           ).publicKey;*/
 
-        const zkappPublicKey = PublicKey.fromBase58("B62qkvu5auhiL2JZnUtafpSyWJ7AW5gxrHyVzNXqxNPMkzPW1RbV2Zg");
+        const zkappPublicKey = PublicKey.fromBase58("B62qoGMwPAzPPuNPxKx666s8bNJx7Mqhk96XfjyPZjoiwDtAjkfypvh");
         await zkappWorkerClient.initZkappInstance(zkappPublicKey);
 
         console.log("Getting zkApp state...");

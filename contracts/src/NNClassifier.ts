@@ -9,13 +9,11 @@ import {
   MerkleTree,
   MerkleWitness,
   Struct,
-  Poseidon
+  Poseidon,
 } from 'o1js';
 import { model, floatToFixedQ1616, fixedQ1616ToFloat } from './helper.js';
 import { nnClassifier } from './modelGen.js';
 import * as mathjs from 'mathjs';
-import { verify } from 'crypto';
-import { assert } from 'console';
 
 export class NNClassifier extends SmartContract {
   @state(Field) result = State<Field>();
@@ -891,6 +889,6 @@ export class NNClassifier extends SmartContract {
     const currentState4 = this.allHashes.getAndAssertEquals();
 
     const allHashes = Poseidon.hash([inputHash, outputHash]);
-    assert(allHashes.equals(currentState4), "allHashes not equal");
+    allHashes.assertEquals(currentState4);
   }
 }

@@ -1,4 +1,6 @@
-import { Mina, PublicKey, fetchAccount, UInt32, Field } from "o1js";
+import { Mina, PublicKey, fetchAccount, UInt32, Field, Poseidon } from "o1js";
+import * as math from 'mathjs';
+import { nnClassifier } from "@/contracts/src/modelGen";
 
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
@@ -45,9 +47,19 @@ const functions = {
 
   runZkml: async (args: {in: number[]}) => {
     console.log(args.in)
+    const inputMatrix = math.matrix(args.in);
+
+    const [output, maxIndex, probability] = nnClassifier(inputMatrix);
+    const outputArray = output.valueOf() as number[];
+ 
+    const outputField = outputArray.map((x) => Field(floatToFixedQ1616(x)));
+    const outputHash = Poseidon.hash(outputField);
+
+
+
     const input = args.in.map((x) => Field(floatToFixedQ1616(x)));
     const transaction = await Mina.transaction(() => {
-      state.zkapp!.feedforward(
+      state.zkapp!.createMLProof(
         input[0],
         input[1],
         input[2],
@@ -243,10 +255,12 @@ const functions = {
         input[192],
         input[193],
         input[194],
-        input[195]
+        input[195],
+        outputHash
       );
     });
     state.transaction = transaction;
+    return [outputArray, maxIndex, probability];
   },
   // getBallot: async (args: {}) => {
   //   const currentBallot = await state.zkapp!.ballot.get();

@@ -13,7 +13,7 @@
     flex-wrap: wrap;
     gap: 30px;
     justify-content: center;
-    .cat {
+    .digit {
       cursor: pointer;
       transition: 200ms ease;
       position: relative;
@@ -24,14 +24,14 @@
         transform: scale(0.95);
       }
       &.selected {
-        .cat__image {
+        .digit__image {
           border: 5px solid $secondaryColor;
         }
-        .cat__name {
+        .digit__name {
           color: $secondaryColor;
         }
       }
-      .cat__image {
+      .digit__image {
         width: 150px;
         height: 150px;
         position: relative;
@@ -40,7 +40,7 @@
         border: 5px solid transparent;
         z-index: 1;
         position: relative;
-        .cat__vote__mask {
+        .digit__vote__mask {
           position: absolute;
           z-index: 2;
           left: 0;
@@ -51,7 +51,7 @@
           align-items: center;
           justify-content: flex-end;
           background-color: change-color($color: $secondaryColor, $alpha: 0.8);
-          .cat__vote__value {
+          .digit__vote__value {
             font-size: 1.1rem;
             font-weight: 700;
             margin: 10px 0;
@@ -59,7 +59,7 @@
           }
         }
       }
-      .cat__name {
+      .digit__name {
         font-size: 1.3rem;
         font-weight: 700;
         margin: 10px 0;

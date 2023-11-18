@@ -16,7 +16,7 @@ import Image from "next/image";
 import { useLocalStorage } from "@/hooks";
 import numeral from "numeral";
 
-const CATS = [
+const DIGITS = [
   {
     name: "Test Image 1",
     image: img1,
@@ -90,9 +90,9 @@ export default function Images({
   return (
     <div className={styles.container}>
       <div className={styles.grid}>
-        {CATS.map((cat, index) => (
+        {DIGITS.map((digit, index) => (
           <div
-            className={cn(styles.cat, {
+            className={cn(styles.digit, {
               [styles.selected]: index === selectedIndex,
             })}
             key={index}
@@ -104,27 +104,27 @@ export default function Images({
               onSelectImage?.(index);
             }}
           >
-            <div className={styles.cat__image}>
+            <div className={styles.digit__image}>
               {showResults && getShare(index) > 0 && (
                 <div
-                  className={styles.cat__vote__mask}
+                  className={styles.digit__vote__mask}
                   style={{
                     height: `${getShare(index)}%`,
                   }}
                 >
-                  <p className={styles.cat__vote__value}>
+                  <p className={styles.digit__vote__value}>
                     {numeral(getShare(index)).format("0")}%
                   </p>
                 </div>
               )}
               <Image
-                src={cat.image}
-                alt={`Picture of ${cat.name}`}
+                src={digit.image}
+                alt={`Picture of ${digit.name}`}
                 fill
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <p className={styles.cat__name}>{cat.name}</p>
+            <p className={styles.digit__name}>{digit.name}</p>
           </div>
         ))}
       </div>
