@@ -1,5 +1,5 @@
 "use client";
-import styles from "./candidates.module.scss";
+import styles from "./nmists.module.scss";
 import cn from "classnames";
 import img1 from "@/public/mnist/test_image_0.jpg";
 import img2 from "@/public/mnist/test_image_1.jpg";

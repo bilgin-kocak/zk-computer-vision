@@ -262,16 +262,6 @@ const functions = {
     state.transaction = transaction;
     return [outputArray, maxIndex, probability];
   },
-  // getBallot: async (args: {}) => {
-  //   const currentBallot = await state.zkapp!.ballot.get();
-  //   return JSON.stringify(currentBallot);
-  // },
-  // cast: async (args: { candidate: number }) => {
-  //   const transaction = await Mina.transaction(() => {
-  //     state.zkapp!.cast(UInt32.from(args.candidate));
-  //   });
-  //   state.transaction = transaction;
-  // },
   proveTransaction: async (args: {}) => {
     await state.transaction!.prove();
   },

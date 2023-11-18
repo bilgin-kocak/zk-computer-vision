@@ -5,7 +5,7 @@ import { wait } from "@/lib/client-side/utils";
 import type ZkappWorkerClient from "../zkappWorkerClient";
 import { Button } from "@/components/button/Button";
 import { Alert } from "@/components/alert/Alert";
-import Images from "./candidates/candidates";
+import Images from "./nmists/nmists";
 import Link from "next/link";
 import { useLocalStorage } from "@/hooks";
 import inputs  from "@/lib/client-side/inputs.json";
@@ -202,6 +202,7 @@ export default function Content() {
 
   return (
     <div className={styles.container}>
+      <h3 className="headLine">Click Handwritten Digits to Compute MNIST Classifier</h3>
       <Alert
         message={alert.message}
         visible={!!alert.message}
@@ -238,17 +239,16 @@ export default function Content() {
               disabled={image < 0}
             />
           )}
-        {/* {state.calculated && (
-          <>
-            <Button href="/results" theme="primary" text="Show results" />
-            <Button
-              href={transactionlink}
-              theme="transparent"
-              text="View transaction"
-              openLinkInNewTab={true}
-            />
-          </>
-        )} */}
+          {state.calculated && (
+          <Button
+          onClick={onSelectImage}
+          text="Run ZKML"
+          theme="primary"
+          loading={state.calculating}
+          loadingText="Calculating..."
+          disabled={image < 0}
+        />
+        )}
       </div>
     </div>
   );

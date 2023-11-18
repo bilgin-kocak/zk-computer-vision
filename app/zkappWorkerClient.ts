@@ -46,19 +46,6 @@ export default class ZkappWorkerClient {
   runZkml(input: number[]) {
     return this._call("runZkml", {in: input});
   }
-
-
-  // async getBallot(): Promise<any> {
-  //   const result = await this._call("getBallot", {});
-  //   return JSON.parse(result as string);
-  // }
-
-  // cast(candidate: number) {
-  //   return this._call("cast", {
-  //     candidate,
-  //   });
-  // }
-
   proveTransaction() {
     return this._call("proveTransaction", {});
   }
